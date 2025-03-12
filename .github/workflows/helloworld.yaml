@@ -18,6 +18,25 @@ jobs:
       - name: Checkout GitHub repository
         uses: actions/checkout@v4
 
+      - name: Cache Cargo Registry + Build
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+
+      - name: Cache Cargo bin
+        uses: actions/cache@v3
+        with:
+          path: ~/.cargo/bin
+          key: cargo-bin-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-bin-${{ runner.os }}-
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
