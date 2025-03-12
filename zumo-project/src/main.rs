@@ -1,3 +1,3 @@
 fn main() {
-    println! ("hello, wold! is first gabriel rust application. happy winning!");
+    println!("hello, wold! is first gabriel rust application. happy winning!");
 }
