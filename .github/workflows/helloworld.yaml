@@ -18,6 +18,10 @@ jobs:
       - name: Checkout GitHub repository
         uses: actions/checkout@v4
 
+      - name: Switch to working directory
+        run: |
+          cd zumo-project
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
