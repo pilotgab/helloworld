@@ -37,7 +37,7 @@ jobs:
           restore-keys: |
             cargo-bin-${{ runner.os }}-
 
-      - name: Install Rust
+      - name: Install Rust (Stable)
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
@@ -66,6 +66,12 @@ jobs:
           CARGO_TERM_COLOR: always
           GITHUB_TOKEN: ${{ secrets._GITHUB_TOKEN }}
 
+      - name: Install Rust (Nightly) for cargo-udeps
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          toolchain: nightly
+          override: true
+
       - name: Install cargo-udeps
         run: cargo install cargo-udeps
 
@@ -73,9 +79,10 @@ jobs:
         run: cd zumo-project && cargo udeps
 
       - name: Install Rust (Nightly) for performance benchmarking
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@nightly
         with:
           toolchain: nightly
+          override: true
 
       - name: Run benchmarks
         run: cd zumo-project && cargo bench
