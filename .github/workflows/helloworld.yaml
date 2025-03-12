@@ -76,7 +76,10 @@ jobs:
           override: true
 
       - name: Install cargo-udeps
-        run: cargo install cargo-udeps
+        run: |
+          if ! command -v cargo-udeps &> /dev/null; then
+            cargo install cargo-udeps
+          fi
 
       - name: Check for unused dependencies
         run: cd zumo-project && cargo udeps
