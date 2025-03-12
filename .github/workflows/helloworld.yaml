@@ -24,32 +24,31 @@ jobs:
           components: clippy, rustfmt
 
       - name: Rust fmt for code formatting check
-        run: cargo fmt --all -- --check
-        working-directory: zumo-project
+        run: cd zumo-project && cargo fmt --all -- --check
 
       - name: Linting with Clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
-        working-directory: zumo-project
+        run: cd zumo-project && cargo clippy --all-targets --all-features -- -D warnings
 
       - name: Build Rust application
-        run: cargo build --release
-        working-directory: zumo-project
+        run: cd zumo-project && cargo build --release
 
       - name: Run unit and integration tests
-        run: cargo test --all --all-features --verbose
-        working-directory: zumo-project
+        run: cd zumo-project && cargo test --all --all-features --verbose
 
       - name: Run a security audit test
-        uses: actions-rs/audit-check@v1
-        with:
-          token: ${{ secrets._GITHUB_TOKEN }}
+        run: |
+          cd zumo-project
+          cargo generate-lockfile
+          cargo audit
+        env:
+          CARGO_TERM_COLOR: always
+          GITHUB_TOKEN: ${{ secrets._GITHUB_TOKEN }}
 
       - name: Install cargo-udeps
         run: cargo install cargo-udeps
 
       - name: Check for unused dependencies
-        run: cargo udeps
-        working-directory: zumo-project
+        run: cd zumo-project && cargo udeps
 
       - name: Install Rust (Nightly) for performance benchmarking
         uses: dtolnay/rust-toolchain@stable
@@ -57,5 +56,4 @@ jobs:
           toolchain: nightly
 
       - name: Run benchmarks
-        run: cargo bench
-        working-directory: zumo-project
+        run: cd zumo-project && cargo bench
