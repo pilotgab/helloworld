@@ -1,4 +1,4 @@
-name: ci_pipline
+name: ci_pipeline
 
 on:
   push:
@@ -15,40 +15,41 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout github repository
+      - name: Checkout GitHub repository
         uses: actions/checkout@v4
 
-      - name: Install rust
+      - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
 
-      - name: rust fmt for code formating check
+      - name: Rust fmt for code formatting check
         run: cargo fmt --all -- --check
 
-      - name: linting with clippy
-        run: cargo clippy --all -targets --all-features -- -D warning
+      - name: Linting with Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
 
-      - name: build rust application
-        run: |
-          cargo build --release
+      - name: Build Rust application
+        run: cargo build --release
 
-      - name: run unit and integration test
-        run: |
-          cargo test --all --all-features --verbose
+      - name: Run unit and integration tests
+        run: cargo test --all --all-features --verbose
 
-      - name: run a security autdit test
+      - name: Run a security audit test
         uses: actions-rs/audit-check@v1
         with:
           token: ${{ secrets._GITHUB_TOKEN }}
 
-      - name: check for unused dep in the code
-        uses: cargo install cargo-udeps && udeps
+      - name: Install cargo-udeps
+        run: cargo install cargo-udeps
 
-      - name: Install Rust (Nightly) for performance Benchmarking
+      - name: Check for unused dependencies
+        run: cargo udeps
+
+      - name: Install Rust (Nightly) for performance benchmarking
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: nightly
 
-      - name: Run Benchmarks
+      - name: Run benchmarks
         run: cargo bench
