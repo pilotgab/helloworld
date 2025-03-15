@@ -73,7 +73,6 @@ jobs:
         uses: dtolnay/rust-toolchain@nightly
         with:
           toolchain: nightly
-          override: true
 
       - name: Install cargo-udeps
         run: |
@@ -84,11 +83,34 @@ jobs:
       - name: Check for unused dependencies
         run: cd zumo-project && cargo udeps
 
-      - name: Install Rust (Nightly) for performance benchmarking
-        uses: dtolnay/rust-toolchain@nightly
-        with:
-          toolchain: nightly
-          override: true
-
       - name: Run benchmarks
         run: cd zumo-project && cargo bench
+
+  build-and-scan-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout the repository
+        uses: actions/checkout@v4
+
+      - name: login to docker registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: build  the docker image
+        run: |
+          docker build -t captaingab/app:${{github.sha}} .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: "captaingab/app:${{ github.sha }}"
+          format: "table"
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+
+      - name: push docker image to docker registry
+        run: docker push captaingab/app:${{github.sha}}
