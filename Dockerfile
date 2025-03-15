@@ -13,7 +13,7 @@ RUN cargo build --release && rm -rf src target/release/deps
 COPY zumo-project .
 RUN cargo build --release
 
-# Create a non-root user in the builder stage
+# Set a non-root user for security
 RUN useradd -m rustuser
 
 # ===== 2️⃣ Final Runtime Stage =====
@@ -29,7 +29,7 @@ COPY --from=builder /etc/group /etc/group
 # Set the non-root user
 USER rustuser
 
-# Expose application port
+# Expose application port (modify if necessary)
 EXPOSE 8080
 
 # Set entrypoint
