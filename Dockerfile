@@ -20,7 +20,7 @@ RUN useradd -m rustuser
 FROM gcr.io/distroless/cc
 
 # Copy the compiled binary from the builder stage
-COPY --from=builder /app/target/release/my_app /usr/local/bin/my_app
+COPY --from=builder /app/target/release/zumo-project /usr/local/bin/zumo-project
 
 # Copy the non-root user information from the builder stage
 COPY --from=builder /etc/passwd /etc/passwd
@@ -33,4 +33,4 @@ USER rustuser
 EXPOSE 8080
 
 # Set entrypoint
-ENTRYPOINT ["/usr/local/bin/my_app"]
+ENTRYPOINT ["/usr/local/bin/zumo-project"]
