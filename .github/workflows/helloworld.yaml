@@ -87,6 +87,7 @@ jobs:
         run: cd zumo-project && cargo bench
 
   build-and-scan-image:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: checkout the repository
