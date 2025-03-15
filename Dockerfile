@@ -1,5 +1,5 @@
 # ===== 1️⃣ Build Stage =====
-FROM rust:1.67 as builder
+FROM rust:1.85 as builder
 
 # Set working directory
 WORKDIR /app
