@@ -14,7 +14,7 @@ COPY zumo-project .
 RUN cargo build --release
 
 # Set a non-root user for security
-RUN useradd -m rustuser
+RUN useradd -m appuser
 
 # ===== 2️⃣ Final Runtime Stage =====
 FROM gcr.io/distroless/cc
@@ -27,7 +27,7 @@ COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
 # Set the non-root user
-USER rustuser
+USER appuser
 
 # Expose application port (modify if necessary)
 EXPOSE 8080
