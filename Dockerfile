@@ -1,5 +1,5 @@
 # ===== 1️⃣ Build Stage =====
-FROM rust:nightly as builder
+FROM rust:1.67 as builder
 
 # Set working directory
 WORKDIR /app
