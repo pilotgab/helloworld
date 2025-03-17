@@ -1,1 +1,2 @@
 /target
+.cache/trivy/db/trivy.db
